@@ -1,0 +1,11 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/gitIntegration/platformProperties/2.0.0/schema.json",
+  "metadata": {
+    "type": "SemanticModel",
+    "displayName": "Calorie dashboard"
+  },
+  "config": {
+    "version": "2.0",
+    "logicalId": "d7bd46c4-ee98-468c-bf1d-3fa457dd7563"
+  }
+}

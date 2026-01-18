@@ -1,0 +1,78 @@
+table UserProfile
+	lineageTag: 7946a95d-7f95-4299-afc3-5b5d0abcf310
+
+	column UserID
+		dataType: int64
+		formatString: 0
+		lineageTag: 6d93566e-fb95-4f7b-aaca-e6e09de0fe29
+		summarizeBy: none
+		sourceColumn: UserID
+
+		annotation SummarizationSetBy = Automatic
+
+	column UserName
+		dataType: string
+		lineageTag: 25202865-63d7-496f-b4e4-46684df73d10
+		summarizeBy: none
+		sourceColumn: UserName
+
+		annotation SummarizationSetBy = Automatic
+
+	column Age
+		dataType: int64
+		formatString: 0
+		lineageTag: b304ec00-8f7f-4fa6-844b-b70862f8d1ef
+		summarizeBy: none
+		sourceColumn: Age
+
+		annotation SummarizationSetBy = User
+
+	column Gender
+		dataType: string
+		lineageTag: 05691778-74b3-4651-92be-7eefeca7899e
+		summarizeBy: none
+		sourceColumn: Gender
+
+		annotation SummarizationSetBy = Automatic
+
+	column Height_cm
+		dataType: int64
+		formatString: 0
+		lineageTag: 0b9a873e-b204-4b3b-bbdb-35aa8d193022
+		summarizeBy: none
+		sourceColumn: Height_cm
+
+		annotation SummarizationSetBy = User
+
+	column Weight_kg
+		dataType: int64
+		formatString: 0
+		lineageTag: 76b255c6-bc5f-46ae-94ee-7d550a5bf930
+		summarizeBy: none
+		sourceColumn: Weight_kg
+
+		annotation SummarizationSetBy = User
+
+	column ActivityLevel
+		dataType: string
+		lineageTag: d025dfab-b39f-4fe0-ad17-47b13332b50a
+		summarizeBy: none
+		sourceColumn: ActivityLevel
+
+		annotation SummarizationSetBy = Automatic
+
+	partition UserProfile = m
+		mode: import
+		source =
+				let
+				    Source = Excel.Workbook(File.Contents("C:\Users\Dinu Lakshmi.c\Downloads\Calorie_Estimation_Complete_Dataset.xlsx"), null, true),
+				    UserProfile_Sheet = Source{[Item="UserProfile",Kind="Sheet"]}[Data],
+				    #"Promoted Headers" = Table.PromoteHeaders(UserProfile_Sheet, [PromoteAllScalars=true]),
+				    #"Changed Type" = Table.TransformColumnTypes(#"Promoted Headers",{{"UserID", Int64.Type}, {"UserName", type text}, {"Age", Int64.Type}, {"Gender", type text}, {"Height_cm", Int64.Type}, {"Weight_kg", Int64.Type}, {"ActivityLevel", type text}})
+				in
+				    #"Changed Type"
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

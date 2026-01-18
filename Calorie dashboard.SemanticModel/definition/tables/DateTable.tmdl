@@ -1,0 +1,95 @@
+table DateTable
+	lineageTag: 042e725e-f503-41b8-8df0-4803b27bac49
+	dataCategory: Time
+
+	column Date
+		isKey
+		formatString: General Date
+		lineageTag: 6bf77a69-9c5b-477e-a333-8e5cc1ab33b7
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Date]
+
+		annotation SummarizationSetBy = Automatic
+
+	column Year
+		formatString: 0
+		lineageTag: 7fdf7627-f8ae-4fef-94f9-7c24dc043b65
+		summarizeBy: sum
+		isNameInferred
+		sourceColumn: [Year]
+
+		annotation SummarizationSetBy = Automatic
+
+	column Month
+		lineageTag: 768d2cc8-afcf-427b-a05b-ae2c592661cf
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Month]
+
+		annotation SummarizationSetBy = Automatic
+
+	column WeekNum
+		formatString: 0
+		lineageTag: 1002beba-12a9-4956-8c71-2ba2cd63145b
+		summarizeBy: sum
+		isNameInferred
+		sourceColumn: [WeekNum]
+
+		annotation SummarizationSetBy = Automatic
+
+	column WeekStart
+		formatString: General Date
+		lineageTag: c4004116-3602-4a03-a0c0-76e3b6e90ead
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [WeekStart]
+
+		annotation SummarizationSetBy = Automatic
+
+	column Day
+		lineageTag: b8fa34c3-982f-494c-b773-83129278b344
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Day]
+
+		annotation SummarizationSetBy = Automatic
+
+	column MonthNum
+		formatString: 0
+		lineageTag: e7f9097e-b617-44bb-bf8e-c552d1e8449b
+		summarizeBy: sum
+		isNameInferred
+		sourceColumn: [MonthNum]
+
+		annotation SummarizationSetBy = Automatic
+
+	column WeekLabel = ```
+			
+			"Week " & DateTable[WeekNum] & " (" &
+			FORMAT(DateTable[WeekStart], "dd MMM") & ")"
+			
+			```
+		lineageTag: 79b89930-8f25-47ca-a6a8-21ea5ad4058d
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+
+	partition DateTable = calculated
+		mode: import
+		source = ```
+				
+				ADDCOLUMNS (
+				    CALENDAR ( MIN(FoodLog[Date]), MAX(FoodLog[Date]) ),
+				    "Year", YEAR([Date]),
+				    "Month", FORMAT([Date], "MMM"),
+				    "WeekNum", WEEKNUM([Date], 2),         -- Week starts on Monday
+				    "WeekStart", [Date] - WEEKDAY([Date], 2) + 1,
+				    "Day", FORMAT([Date], "ddd"),
+				    "MonthNum", MONTH([Date])
+				)
+				
+				```
+
+	annotation PBI_Id = f9ec095007b24f2bbc4e097bd472d930
+

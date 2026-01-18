@@ -1,0 +1,80 @@
+table FoodItems
+	lineageTag: 336cada6-423a-4d95-a270-01bd20fe8ec9
+
+	column FoodID
+		dataType: int64
+		formatString: 0
+		lineageTag: a4d66d55-5ea1-41e2-83c8-81836cbb53fa
+		summarizeBy: none
+		sourceColumn: FoodID
+
+		annotation SummarizationSetBy = Automatic
+
+	column FoodName
+		dataType: string
+		lineageTag: bfd6200b-c687-4489-9873-727b8cbeff9f
+		summarizeBy: none
+		sourceColumn: FoodName
+
+		annotation SummarizationSetBy = Automatic
+
+	column Category
+		dataType: string
+		lineageTag: 42b3b877-24b8-417d-8792-bc580e98fbab
+		summarizeBy: none
+		sourceColumn: Category
+
+		annotation SummarizationSetBy = Automatic
+
+	column Calories
+		dataType: int64
+		formatString: 0
+		lineageTag: 65f83327-0487-44fc-b567-1794d3a6f8b6
+		summarizeBy: none
+		sourceColumn: Calories
+
+		annotation SummarizationSetBy = Automatic
+
+	column Protein_g
+		dataType: int64
+		formatString: 0
+		lineageTag: 378698e8-9524-4078-ac71-435bab264bba
+		summarizeBy: none
+		sourceColumn: Protein_g
+
+		annotation SummarizationSetBy = Automatic
+
+	column Carbs_g
+		dataType: int64
+		formatString: 0
+		lineageTag: f64a3e4e-fe0f-4ddf-a59c-6ccbc0e85504
+		summarizeBy: none
+		sourceColumn: Carbs_g
+
+		annotation SummarizationSetBy = Automatic
+
+	column Fat_g
+		dataType: double
+		lineageTag: 2d4cbfb2-4f87-400b-b5da-439b128229bb
+		summarizeBy: none
+		sourceColumn: Fat_g
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	partition FoodItems = m
+		mode: import
+		source =
+				let
+				    Source = Excel.Workbook(File.Contents("C:\Users\Dinu Lakshmi.c\Downloads\Calorie_Estimation_Complete_Dataset.xlsx"), null, true),
+				    FoodItems_Sheet = Source{[Item="FoodItems",Kind="Sheet"]}[Data],
+				    #"Promoted Headers" = Table.PromoteHeaders(FoodItems_Sheet, [PromoteAllScalars=true]),
+				    #"Changed Type" = Table.TransformColumnTypes(#"Promoted Headers",{{"FoodID", Int64.Type}, {"FoodName", type text}, {"Category", type text}, {"Calories", Int64.Type}, {"Protein_g", Int64.Type}, {"Carbs_g", Int64.Type}, {"Fat_g", type number}})
+				in
+				    #"Changed Type"
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

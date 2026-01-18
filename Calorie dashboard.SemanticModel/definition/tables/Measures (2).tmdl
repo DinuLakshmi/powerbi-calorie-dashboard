@@ -1,0 +1,149 @@
+table 'Measures (2)'
+	lineageTag: f5686f50-8210-49ea-b392-f43fb90432c3
+
+	measure TotalCaloriesConsumed = SUM(FoodLog[TotalCalories])
+		formatString: 0
+		lineageTag: 3e0d0dfb-6d25-49b0-9db8-35bb6fb7141b
+
+	measure TotalCaloriesBurned = SUM(WorkoutLog[CaloriesBurned])
+		formatString: 0
+		lineageTag: b9d58150-8c5d-40d1-bd30-c2dd06e7e1b9
+
+	measure NetCalories = [TotalCaloriesConsumed] - [TotalCaloriesBurned]
+		formatString: 0
+		lineageTag: 22fbf713-03d4-419b-9190-93c49d5f89a8
+
+	measure TotalDays = DISTINCTCOUNT(FoodLog[Date])
+		formatString: 0
+		lineageTag: 7bb755ad-d634-4786-9a09-4ca4e35964bc
+
+	measure AvgDailyCalories =
+			
+			DIVIDE( [TotalCaloriesConsumed], [TotalDays] )
+		lineageTag: 5dce1b8d-f281-4083-aa1b-1f1a434ea8c6
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure MaxDailyCalories = MAX(FoodLog[TotalCalories])
+		formatString: 0
+		lineageTag: c8f42f85-d04a-413f-b44c-155669ec32bf
+
+	measure BreakfastCalories = CALCULATE( SUM(FoodLog[TotalCalories]), FoodLog[MealType] = "Breakfast" )
+		formatString: 0
+		lineageTag: 41159ea0-551b-4cd1-8723-0e5778a1ab06
+
+	measure LunchCalories = CALCULATE( SUM(FoodLog[TotalCalories]), FoodLog[MealType] = "Lunch" )
+		formatString: 0
+		lineageTag: 640b7e5f-04c3-4e81-8ed7-abb97a050d07
+
+	measure DinnerCalories = CALCULATE( SUM(FoodLog[TotalCalories]), FoodLog[MealType] = "Dinner" )
+		formatString: 0
+		lineageTag: b6b7bfa9-5179-4040-82d9-a2f9a210d4c1
+
+	measure SnackCalories = CALCULATE( SUM(FoodLog[TotalCalories]), FoodLog[MealType] = "Snack" )
+		formatString: 0
+		lineageTag: 6a2b3cd9-b2c0-47b9-84b4-2549496ca56f
+
+	measure AvgCalorieGoal = ```
+			AVERAGE(DailyGoals[TargetCalories]) 
+			```
+		lineageTag: a3114c0e-6e0b-44cc-be08-e01d53c4c538
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Goal Achievement %' = ```
+			
+			VAR PerDayTable =
+			    SUMMARIZE(
+			        FoodLog,
+			        FoodLog[UserID],
+			        FoodLog[Date],
+			        "DailyCalories", CALCULATE( SUM( FoodLog[TotalCalories] ) ),
+			        "DailyGoal",
+			            VAR GoalForSameDay =
+			                LOOKUPVALUE(
+			                    DailyGoals[TargetCalories],
+			                    DailyGoals[UserID], FoodLog[UserID],
+			                    DailyGoals[Date], FoodLog[Date]
+			                )
+			            RETURN
+			                IF(
+			                    NOT( ISBLANK( GoalForSameDay ) ),
+			                    GoalForSameDay,
+			                    -- fallback: use user-level average goal if day-level goal missing
+			                    CALCULATE( AVERAGE( DailyGoals[TargetCalories] ), FILTER( DailyGoals, DailyGoals[UserID] = EARLIER( FoodLog[UserID] ) ) )
+			                )
+			    )
+			VAR Result = AVERAGEX( PerDayTable, DIVIDE( [DailyCalories], [DailyGoal], 0 ) )
+			RETURN Result
+			
+			```
+		formatString: 0.0%;-0.0%;0.0%
+		lineageTag: 2a52bfa0-fa4b-4300-9df4-f6ca1475c396
+
+	measure TotalProtein_g = SUM(FoodItems[Protein_g])
+		formatString: 0
+		lineageTag: 1ae6a2c6-4708-4e0e-9d8c-2429375f63c8
+
+	measure TotalFat_g = SUM(FoodItems[Fat_g])
+		lineageTag: a7fa2898-6f43-4bf4-a280-15fea56b670a
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure TotalCarbs_g = SUM(FoodItems[Carbs_g])
+		formatString: 0
+		lineageTag: bb137442-effa-4dd3-bbeb-bb1ef7c2a8bb
+
+	measure ProteinCalories = ```
+			
+			SUMX(
+			    FoodLog,
+			    FoodLog[Quantity] * RELATED(FoodItems[Protein_g]) * 4
+			)
+			
+			```
+		formatString: 0
+		lineageTag: 33c9c05f-7cc4-4880-9b79-eda88cb122ee
+
+	measure CarbCalories = ```
+			
+			SUMX(
+			    FoodLog,
+			    FoodLog[Quantity] * RELATED(FoodItems[Carbs_g]) * 4
+			)
+			
+			```
+		formatString: 0
+		lineageTag: f0e2e72d-efa7-45de-90a2-7e6a1e8cd3f5
+
+	measure FatCalories = ```
+			
+			SUMX(
+			    FoodLog,
+			    FoodLog[Quantity] * RELATED(FoodItems[Fat_g]) * 9
+			)
+			
+			```
+		lineageTag: a27494f9-fe91-4aa9-b3c4-1024312406f0
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column Column1
+		dataType: string
+		lineageTag: 9426f6fc-61c8-4c80-aa1f-0ef722071840
+		summarizeBy: none
+		sourceColumn: Column1
+
+		annotation SummarizationSetBy = Automatic
+
+	partition 'Measures (2)' = m
+		mode: import
+		source =
+				let
+				    Source = Table.FromRows(Json.Document(Binary.Decompress(Binary.FromText("i44FAA==", BinaryEncoding.Base64), Compression.Deflate)), let _t = ((type nullable text) meta [Serialized.Text = true]) in type table [Column1 = _t]),
+				    #"Changed Type" = Table.TransformColumnTypes(Source,{{"Column1", type text}})
+				in
+				    #"Changed Type"
+
+	annotation PBI_ResultType = Table
+

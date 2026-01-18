@@ -1,0 +1,73 @@
+table WorkoutLog
+	lineageTag: 10f2478f-554c-4aa8-9426-a2967a60e49c
+
+	column WorkoutID
+		dataType: int64
+		formatString: 0
+		lineageTag: e5d430a5-8d77-4fd8-b560-7b9a46216cd2
+		summarizeBy: count
+		sourceColumn: WorkoutID
+
+		annotation SummarizationSetBy = Automatic
+
+	column UserID
+		dataType: int64
+		formatString: 0
+		lineageTag: b411c423-9ce6-473b-a6e5-5c7d36b4d9c5
+		summarizeBy: none
+		sourceColumn: UserID
+
+		annotation SummarizationSetBy = Automatic
+
+	column Date
+		dataType: dateTime
+		formatString: Long Date
+		lineageTag: 4bbf216f-c7ac-495e-aa1b-bc5f1ec7a055
+		summarizeBy: none
+		sourceColumn: Date
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column WorkoutType
+		dataType: string
+		lineageTag: e5ce88ed-9db9-49dc-8711-e13604bd436d
+		summarizeBy: none
+		sourceColumn: WorkoutType
+
+		annotation SummarizationSetBy = Automatic
+
+	column Duration_min
+		dataType: int64
+		formatString: 0
+		lineageTag: 322ab31a-c253-492a-80c0-e44d2ea15f82
+		summarizeBy: sum
+		sourceColumn: Duration_min
+
+		annotation SummarizationSetBy = Automatic
+
+	column CaloriesBurned
+		dataType: int64
+		formatString: 0
+		lineageTag: bb052cc5-c73f-420a-9471-b00f756b9e87
+		summarizeBy: sum
+		sourceColumn: CaloriesBurned
+
+		annotation SummarizationSetBy = Automatic
+
+	partition WorkoutLog = m
+		mode: import
+		source =
+				let
+				    Source = Excel.Workbook(File.Contents("C:\Users\Dinu Lakshmi.c\Downloads\Calorie_Estimation_Complete_Dataset.xlsx"), null, true),
+				    WorkoutLog_Sheet = Source{[Item="WorkoutLog",Kind="Sheet"]}[Data],
+				    #"Promoted Headers" = Table.PromoteHeaders(WorkoutLog_Sheet, [PromoteAllScalars=true]),
+				    #"Changed Type" = Table.TransformColumnTypes(#"Promoted Headers",{{"WorkoutID", Int64.Type}, {"UserID", Int64.Type}, {"Date", type date}, {"WorkoutType", type text}, {"Duration_min", Int64.Type}, {"CaloriesBurned", Int64.Type}})
+				in
+				    #"Changed Type"
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

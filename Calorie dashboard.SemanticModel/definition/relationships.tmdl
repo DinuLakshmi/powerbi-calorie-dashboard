@@ -1,0 +1,29 @@
+relationship bd2e3a1f-44d1-4340-bdfb-7d14e97305fd
+	joinOnDateBehavior: datePartOnly
+	fromColumn: DailyGoals.Date
+	toColumn: LocalDateTable_2e3f1e80-021c-4e89-a58b-e0d24fb7c2ee.Date
+
+relationship AutoDetected_2c252112-221f-4981-8886-cc65b55cd992
+	fromColumn: DailyGoals.UserID
+	toColumn: UserProfile.UserID
+
+relationship AutoDetected_4479fa37-60ab-4d46-bd89-923b238f7c10
+	fromColumn: FoodLog.UserID
+	toColumn: UserProfile.UserID
+
+relationship AutoDetected_26fdaa5a-ca66-445a-8328-805c8ba54c3a
+	fromColumn: WorkoutLog.UserID
+	toColumn: UserProfile.UserID
+
+relationship AutoDetected_d50aa12f-5b77-4f10-9cd2-293838b30845
+	fromColumn: FoodLog.FoodID
+	toColumn: FoodItems.FoodID
+
+relationship aad10eb3-4a4d-16bd-3bb5-3f5134943d20
+	fromColumn: FoodLog.Date
+	toColumn: DateTable.Date
+
+relationship 32d0127f-d8c1-513e-f7fe-e677f0953184
+	fromColumn: WorkoutLog.Date
+	toColumn: DateTable.Date
+

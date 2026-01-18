@@ -1,0 +1,26 @@
+model Model
+	culture: en-IN
+	defaultPowerBIDataSourceVersion: powerBI_V3
+	sourceQueryCulture: en-IN
+	dataAccessOptions
+		legacyRedirects
+		returnErrorValuesAsNull
+
+annotation __PBI_TimeIntelligenceEnabled = 1
+
+annotation PBI_QueryOrder = ["DailyGoals","FoodItems","FoodLog","UserProfile","WorkoutLog","Measures (2)"]
+
+annotation PBI_ProTooling = ["DevMode"]
+
+ref table DailyGoals
+ref table DateTableTemplate_08c8af18-0cb9-4248-b478-67fa9b3a70f1
+ref table LocalDateTable_2e3f1e80-021c-4e89-a58b-e0d24fb7c2ee
+ref table FoodItems
+ref table FoodLog
+ref table UserProfile
+ref table WorkoutLog
+ref table 'Measures (2)'
+ref table DateTable
+
+ref cultureInfo en-IN
+

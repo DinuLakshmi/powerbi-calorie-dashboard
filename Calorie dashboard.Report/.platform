@@ -1,0 +1,11 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/gitIntegration/platformProperties/2.0.0/schema.json",
+  "metadata": {
+    "type": "Report",
+    "displayName": "Calorie dashboard"
+  },
+  "config": {
+    "version": "2.0",
+    "logicalId": "139997ea-f748-4a45-b519-9290a7b1002b"
+  }
+}

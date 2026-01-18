@@ -1,0 +1,122 @@
+table FoodLog
+	lineageTag: 9a7202a2-12b0-47dc-9c0c-1eb4170a4212
+
+	column LogID
+		dataType: int64
+		formatString: 0
+		lineageTag: a9bcb360-1e7e-4c32-ae75-ff6e72360163
+		summarizeBy: count
+		sourceColumn: LogID
+
+		annotation SummarizationSetBy = Automatic
+
+	column UserID
+		dataType: int64
+		formatString: 0
+		lineageTag: 4a43496e-88a6-4d38-a958-d11f8ab452d5
+		summarizeBy: none
+		sourceColumn: UserID
+
+		annotation SummarizationSetBy = Automatic
+
+	column Date
+		dataType: dateTime
+		formatString: Long Date
+		lineageTag: 0e9b2bc3-b711-4d0f-a2bb-a17b4523eb17
+		summarizeBy: none
+		sourceColumn: Date
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column FoodID
+		dataType: int64
+		formatString: 0
+		lineageTag: 2aa4344f-7d41-475c-b87e-b5c882374d8a
+		summarizeBy: none
+		sourceColumn: FoodID
+
+		annotation SummarizationSetBy = Automatic
+
+	column MealType
+		dataType: string
+		lineageTag: 990cff62-4fa8-4b47-8a0c-ec4bd0bea229
+		summarizeBy: none
+		sourceColumn: MealType
+
+		annotation SummarizationSetBy = Automatic
+
+	column Quantity
+		dataType: int64
+		formatString: 0
+		lineageTag: b2f31c61-964e-408e-b853-94981a5a9c08
+		summarizeBy: sum
+		sourceColumn: Quantity
+
+		annotation SummarizationSetBy = Automatic
+
+	column TotalCalories
+		dataType: int64
+		formatString: 0
+		lineageTag: d1009fed-409b-4a47-8795-7a023fb5e75f
+		summarizeBy: sum
+		sourceColumn: TotalCalories
+
+		annotation SummarizationSetBy = Automatic
+
+	column DayName = FORMAT(FoodLog[Date], "dddd")
+		lineageTag: 508f2de4-3318-4ac1-b763-43d1995a296d
+		summarizeBy: none
+		sortByColumn: DayIndex
+
+		changedProperty = SortByColumn
+
+		annotation SummarizationSetBy = Automatic
+
+	column WeekNumber = WEEKNUM(FoodLog[Date])
+		formatString: 0
+		lineageTag: 4a43295c-c5ba-472e-9d0e-2a4dcbfd5b5b
+		summarizeBy: sum
+
+		annotation SummarizationSetBy = Automatic
+
+	column MonthName = FORMAT(FoodLog[Date], "MMMM")
+		lineageTag: 1ea7b3d6-19f8-4a6f-af7f-6b32f3a8e4a3
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+
+	column CalorieClass =
+			
+			IF(FoodLog[TotalCalories] > 600, "High",
+			IF(FoodLog[TotalCalories] > 300, "Medium", "Low"))
+		lineageTag: 8e1de551-8475-45a1-a526-83a40ddf1f97
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+
+	column DayIndex =
+			
+			WEEKDAY( FoodLog[Date], 1 )
+		formatString: 0
+		lineageTag: b72b0871-3199-426b-920c-15728e04f5dd
+		summarizeBy: sum
+
+		annotation SummarizationSetBy = Automatic
+
+	partition FoodLog = m
+		mode: import
+		source =
+				let
+				    Source = Excel.Workbook(File.Contents("C:\Users\Dinu Lakshmi.c\Downloads\Calorie_Estimation_Complete_Dataset.xlsx"), null, true),
+				    FoodLog_Sheet = Source{[Item="FoodLog",Kind="Sheet"]}[Data],
+				    #"Promoted Headers" = Table.PromoteHeaders(FoodLog_Sheet, [PromoteAllScalars=true]),
+				    #"Changed Type" = Table.TransformColumnTypes(#"Promoted Headers",{{"LogID", Int64.Type}, {"UserID", Int64.Type}, {"Date", type date}, {"FoodID", Int64.Type}, {"MealType", type text}, {"Quantity", Int64.Type}, {"TotalCalories", Int64.Type}})
+				in
+				    #"Changed Type"
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

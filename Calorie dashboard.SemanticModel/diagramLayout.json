@@ -1,0 +1,112 @@
+{
+  "version": "1.1.0",
+  "diagrams": [
+    {
+      "ordinal": 0,
+      "scrollPosition": {
+        "x": 142.60869786359262,
+        "y": 0
+      },
+      "nodes": [
+        {
+          "location": {
+            "x": 571.69723626469136,
+            "y": 0
+          },
+          "nodeIndex": "DailyGoals",
+          "nodeLineageTag": "48fc2a72-1f8d-4d75-99fe-a806bcf9b833",
+          "size": {
+            "height": 248,
+            "width": 234
+          },
+          "zIndex": 6
+        },
+        {
+          "location": {
+            "x": 800.59363771930316,
+            "y": 251.46651309812847
+          },
+          "nodeIndex": "FoodItems",
+          "nodeLineageTag": "336cada6-423a-4d95-a270-01bd20fe8ec9",
+          "size": {
+            "height": 248,
+            "width": 234
+          },
+          "zIndex": 1
+        },
+        {
+          "location": {
+            "x": 439.84116237153285,
+            "y": 249.05348844710028
+          },
+          "nodeIndex": "FoodLog",
+          "nodeLineageTag": "9a7202a2-12b0-47dc-9c0c-1eb4170a4212",
+          "size": {
+            "height": 248,
+            "width": 234
+          },
+          "zIndex": 5
+        },
+        {
+          "location": {
+            "x": 50,
+            "y": 143.19043296062881
+          },
+          "nodeIndex": "UserProfile",
+          "nodeLineageTag": "7946a95d-7f95-4299-afc3-5b5d0abcf310",
+          "size": {
+            "height": 248,
+            "width": 234
+          },
+          "zIndex": 2
+        },
+        {
+          "location": {
+            "x": 154.02914855568505,
+            "y": 546.41404770204826
+          },
+          "nodeIndex": "WorkoutLog",
+          "nodeLineageTag": "10f2478f-554c-4aa8-9426-a2967a60e49c",
+          "size": {
+            "height": 224,
+            "width": 234
+          },
+          "zIndex": 3
+        },
+        {
+          "location": {
+            "x": 1034.5936377193032,
+            "y": 358.20702385102413
+          },
+          "nodeIndex": "Measures (2)",
+          "nodeLineageTag": "f5686f50-8210-49ea-b392-f43fb90432c3",
+          "size": {
+            "height": 104,
+            "width": 234
+          },
+          "zIndex": 7
+        },
+        {
+          "location": {
+            "x": 1268.5936377193032,
+            "y": 310.20702385102413
+          },
+          "nodeIndex": "DateTable",
+          "size": {
+            "height": 200,
+            "width": 234
+          },
+          "zIndex": 4
+        }
+      ],
+      "name": "All tables",
+      "zoomValue": 69,
+      "pinKeyFieldsToTop": false,
+      "showExtraHeaderInfo": false,
+      "hideKeyFieldsWhenCollapsed": false,
+      "tablesLocked": false
+    }
+  ],
+  "selectedDiagram": "All tables",
+  "defaultDiagram": "All tables"
+}

@@ -1,0 +1,111 @@
+table DailyGoals
+	lineageTag: 48fc2a72-1f8d-4d75-99fe-a806bcf9b833
+
+	measure TargetCaloriesMeasure = ```
+			MAX(DailyGoals[TargetCalories])
+			
+			```
+		formatString: 0
+		lineageTag: 51adf762-230d-4098-8798-272da3baa35a
+
+	measure GoalAchievement = ```
+			
+			DIVIDE([TotalCaloriesConsumed], [TargetCaloriesMeasure]) * 100
+			
+			```
+		lineageTag: 846e801b-f814-4883-9be3-8e3a73ca2c9c
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure FoodCount = ```
+			COUNT(FoodLog[FoodID])
+			
+			```
+		formatString: 0
+		lineageTag: 5eafe7ba-bbec-43c3-9349-1b8d1b7b45a3
+
+	column GoalID
+		dataType: int64
+		formatString: 0
+		lineageTag: 79750f96-781c-4f49-88d0-2e100e7fa936
+		summarizeBy: count
+		sourceColumn: GoalID
+
+		annotation SummarizationSetBy = Automatic
+
+	column UserID
+		dataType: int64
+		formatString: 0
+		lineageTag: eb71bc95-0a6e-4839-ab08-b6ca9e67fe5b
+		summarizeBy: none
+		sourceColumn: UserID
+
+		annotation SummarizationSetBy = Automatic
+
+	column Date
+		dataType: dateTime
+		formatString: Long Date
+		lineageTag: 908e091c-e9d0-4333-aa1c-5aaa70b5b405
+		summarizeBy: none
+		sourceColumn: Date
+
+		variation Variation
+			isDefault
+			relationship: bd2e3a1f-44d1-4340-bdfb-7d14e97305fd
+			defaultHierarchy: LocalDateTable_2e3f1e80-021c-4e89-a58b-e0d24fb7c2ee.'Date Hierarchy'
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column TargetCalories
+		dataType: int64
+		formatString: 0
+		lineageTag: 25102349-d5fe-440e-8acd-2033df9859b5
+		summarizeBy: sum
+		sourceColumn: TargetCalories
+
+		annotation SummarizationSetBy = Automatic
+
+	column ProteinGoal_g
+		dataType: int64
+		formatString: 0
+		lineageTag: b3623de8-5b5c-45d2-bc74-d4d83e803041
+		summarizeBy: sum
+		sourceColumn: ProteinGoal_g
+
+		annotation SummarizationSetBy = Automatic
+
+	column CarbsGoal_g
+		dataType: int64
+		formatString: 0
+		lineageTag: ec1d1ece-ba45-4d3d-b728-88f3bbf0da37
+		summarizeBy: sum
+		sourceColumn: CarbsGoal_g
+
+		annotation SummarizationSetBy = Automatic
+
+	column FatGoal_g
+		dataType: int64
+		formatString: 0
+		lineageTag: 023d57e1-1383-400e-baa9-58564ef5d4cb
+		summarizeBy: sum
+		sourceColumn: FatGoal_g
+
+		annotation SummarizationSetBy = Automatic
+
+	partition DailyGoals = m
+		mode: import
+		source =
+				let
+				    Source = Excel.Workbook(File.Contents("C:\Users\Dinu Lakshmi.c\Downloads\Calorie_Estimation_Complete_Dataset.xlsx"), null, true),
+				    DailyGoals_Sheet = Source{[Item="DailyGoals",Kind="Sheet"]}[Data],
+				    #"Promoted Headers" = Table.PromoteHeaders(DailyGoals_Sheet, [PromoteAllScalars=true]),
+				    #"Changed Type" = Table.TransformColumnTypes(#"Promoted Headers",{{"GoalID", Int64.Type}, {"UserID", Int64.Type}, {"Date", type date}, {"TargetCalories", Int64.Type}, {"ProteinGoal_g", Int64.Type}, {"CarbsGoal_g", Int64.Type}, {"FatGoal_g", Int64.Type}})
+				in
+				    #"Changed Type"
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+
